@@ -18,7 +18,7 @@
         "mongodb/mongodb": "^1.0.0@beta"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.1",
+        "phpunit/phpunit": "^4.8",
         "scrutinizer/ocular": "^1.1",
         "squizlabs/php_codesniffer": "^2.3"
     },
