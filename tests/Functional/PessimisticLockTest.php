@@ -7,8 +7,6 @@ class PessimisticLockTest extends FunctionalTest
 {
     public function testWaitForLockIsReleased()
     {
-        $this->markTestSkipped('Do not work. Check it later');
-
         $lockCollection = $this->database->selectCollection('storage_lock_test');
         $pessimisticLock = new PessimisticLock($lockCollection);
         $pessimisticLock->createIndexes();
@@ -18,7 +16,11 @@ class PessimisticLockTest extends FunctionalTest
         $startTime = time();
 
         $pessimisticLock->lock('5669dd8f56c02c4628031635');
-        $pessimisticLock->lock('5669dd8f56c02c4628031635', 10);
+        try {
+            $pessimisticLock->lock('5669dd8f56c02c4628031635', 10);
+        } catch (\RuntimeException $e) {
+            // Ignore
+        }
 
         $endTime = time();
 
