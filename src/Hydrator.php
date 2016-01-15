@@ -47,7 +47,7 @@ class Hydrator
     public function hydrate(array $bson, Persistable $model = null)
     {
         $model = $model ?: $this->create();
-        if (false == $model instanceof  Persistable) {
+        if (!($model instanceof Persistable)) {
             throw new \LogicException(
                 sprintf('The model %s must implement %s interface', $this->modelClass, Persistable::class)
             );

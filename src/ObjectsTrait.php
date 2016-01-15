@@ -72,11 +72,11 @@ trait ObjectsTrait
      */
     protected function getObject($namespace, $key, $classOrClosure)
     {
-        if (false == isset($this->values[$namespace][$key])) {
-            return;
+        if (!isset($this->values[$namespace][$key])) {
+            return null;
         }
 
-        if (false == isset($this->objects[$namespace][$key])) {
+        if (!isset($this->objects[$namespace][$key])) {
             $this->objects[$namespace][$key] = build_object(
                 $classOrClosure,
                 $this->values[$namespace][$key],
@@ -118,17 +118,17 @@ trait ObjectsTrait
      */
     protected function getObjects($namespace, $key, $classOrClosure)
     {
-        if (false == isset($this->values[$namespace][$key])) {
+        if (!isset($this->values[$namespace][$key])) {
             return [];
         }
-        if (false == isset($this->objects[$namespace][$key])) {
+        if (!isset($this->objects[$namespace][$key])) {
             $this->objects[$namespace][$key] = [];
         }
 
         // the addObject method can add an object to the end of collection but the rest of collection has not been
         // initiated yet
         foreach (array_keys($this->values[$namespace][$key]) as $valueKey) {
-            if (false == isset($this->objects[$namespace][$key][$valueKey])) {
+            if (!isset($this->objects[$namespace][$key][$valueKey])) {
                 $this->objects[$namespace][$key][$valueKey] = build_object(
                     $classOrClosure,
                     $this->values[$namespace][$key][$valueKey],
@@ -182,10 +182,10 @@ trait ObjectsTrait
      */
     protected function addObject($namespace, $key, $object)
     {
-        if (false == isset($this->values[$namespace][$key])) {
+        if (!isset($this->values[$namespace][$key])) {
             $this->values[$namespace][$key] = [];
         }
-        if (false == isset($this->objects[$namespace][$key])) {
+        if (!isset($this->objects[$namespace][$key])) {
             $this->objects[$namespace][$key] = [];
         }
 

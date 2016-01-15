@@ -30,10 +30,7 @@ trait ValuesTrait
     protected function setValue($namespace, $key, $value)
     {
         if ($value instanceof \DateTime) {
-            $value = [
-                'unix' => (int)$value->format('U'),
-                'iso' => (string)$value->format(DATE_ISO8601),
-            ];
+            $value = $this->formatDate($value);
         }
 
         if (null !== $value) {
@@ -71,8 +68,8 @@ trait ValuesTrait
      */
     protected function getValue($namespace, $key, $default = null, $castTo = null)
     {
-        if (false == array_key_exists($namespace, $this->values)
-            || false == array_key_exists($key, $this->values[$namespace])
+        if (!array_key_exists($namespace, $this->values)
+            || !array_key_exists($key, $this->values[$namespace])
         ) {
             return $default;
         }
@@ -102,14 +99,11 @@ trait ValuesTrait
     protected function addValue($namespace, $key, $value)
     {
         if ($value instanceof \DateTime) {
-            $value = [
-                'unix' => (int)$value->format('U'),
-                'iso' => (string)$value->format(DATE_ISO8601),
-            ];
+            $value = $this->formatDate($value);
         }
 
         $currentValue = $this->getValue($namespace, $key, []);
-        if (false == is_array($currentValue)) {
+        if (!is_array($currentValue)) {
             throw new \LogicException(
                 sprintf('Cannot set value to %s.%s it is already set and not array', $namespace, $key)
             );
@@ -118,5 +112,19 @@ trait ValuesTrait
         $currentValue[] = $value;
 
         $this->setValue($namespace, $key, $currentValue);
+    }
+
+    /**
+     * @param $value
+     * @return array
+     */
+    private function formatDate($value)
+    {
+        $value = [
+            'unix' => (int)$value->format('U'),
+            'iso' => (string)$value->format(DATE_ISO8601),
+        ];
+
+        return $value;
     }
 }
