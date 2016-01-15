@@ -15,47 +15,11 @@ trait ValuesTrait
 
     /**
      * @param string $key
-     * @param mixed  $value
+     * @param mixed $value
      */
     protected function setSelfValue($key, $value)
     {
         $this->setValue('self', $key, $value);
-    }
-
-    /**
-     * @param string $key
-     * @param mixed  $default
-     * @param string $castTo
-     *
-     * @return mixed
-     */
-    protected function getSelfValue($key, $default = null, $castTo = null)
-    {
-        return $this->getValue('self', $key, $default, $castTo);
-    }
-
-    /**
-     * @param string $namespace
-     * @param string $key
-     * @param string $value
-     */
-    protected function addValue($namespace, $key, $value)
-    {
-        if ($value instanceof \DateTime) {
-            $value = [
-                'unix' => (int) $value->format('U'),
-                'iso' => (string) $value->format(DATE_ISO8601),
-            ];
-        }
-
-        $currentValue = $this->getValue($namespace, $key, []);
-        if (false == is_array($currentValue)) {
-            throw new \LogicException(sprintf('Cannot set value to %s.%s it is already set and not array', $namespace, $key));
-        }
-
-        $currentValue[] = $value;
-
-        $this->setValue($namespace, $key, $currentValue);
     }
 
     /**
@@ -67,8 +31,8 @@ trait ValuesTrait
     {
         if ($value instanceof \DateTime) {
             $value = [
-                'unix' => (int) $value->format('U'),
-                'iso' => (string) $value->format(DATE_ISO8601),
+                'unix' => (int)$value->format('U'),
+                'iso' => (string)$value->format(DATE_ISO8601),
             ];
         }
 
@@ -86,16 +50,30 @@ trait ValuesTrait
     }
 
     /**
+     * @param string $key
+     * @param mixed $default
+     * @param string $castTo
+     *
+     * @return mixed
+     */
+    protected function getSelfValue($key, $default = null, $castTo = null)
+    {
+        return $this->getValue('self', $key, $default, $castTo);
+    }
+
+    /**
      * @param string $namespace
      * @param string $key
-     * @param mixed  $default
+     * @param mixed $default
      * @param string $castTo
      *
      * @return mixed
      */
     protected function getValue($namespace, $key, $default = null, $castTo = null)
     {
-        if (false == array_key_exists($namespace, $this->values) || false == array_key_exists($key, $this->values[$namespace])) {
+        if (false == array_key_exists($namespace, $this->values)
+            || false == array_key_exists($key, $this->values[$namespace])
+        ) {
             return $default;
         }
 
@@ -114,5 +92,31 @@ trait ValuesTrait
         }
 
         return $value;
+    }
+
+    /**
+     * @param string $namespace
+     * @param string $key
+     * @param string $value
+     */
+    protected function addValue($namespace, $key, $value)
+    {
+        if ($value instanceof \DateTime) {
+            $value = [
+                'unix' => (int)$value->format('U'),
+                'iso' => (string)$value->format(DATE_ISO8601),
+            ];
+        }
+
+        $currentValue = $this->getValue($namespace, $key, []);
+        if (false == is_array($currentValue)) {
+            throw new \LogicException(
+                sprintf('Cannot set value to %s.%s it is already set and not array', $namespace, $key)
+            );
+        }
+
+        $currentValue[] = $value;
+
+        $this->setValue($namespace, $key, $currentValue);
     }
 }

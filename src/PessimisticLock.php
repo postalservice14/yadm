@@ -27,9 +27,22 @@ class PessimisticLock
     public function __construct(Collection $collection, $sessionId = null)
     {
         $this->collection = $collection;
-        $this->sessionId = $sessionId ?: getmypid().'-'.(microtime(true)*10000);
+        $this->sessionId = $sessionId ?: getmypid() . '-' . (microtime(true) * 10000);
 
-        register_shutdown_function(function () { $this->unlockAll(); });
+        register_shutdown_function(function () {
+            $this->unlockAll();
+        });
+    }
+
+    public function unlockAll()
+    {
+        $result = $this->collection->deleteMany([
+            'sessionId' => $this->sessionId,
+        ]);
+
+        if (false == $result->isAcknowledged()) {
+            throw new \LogicException('Cannot unlock all locked ids. The deleteMany operation is not acknowledged.');
+        }
     }
 
     /**
@@ -40,18 +53,21 @@ class PessimisticLock
      */
     public function lock($id, $limit = 300)
     {
-        $timeout = time() + $limit; // I think it must be a bit greater then mongos index ttl so there is a way to process data.
+        // I think it must be a bit greater then mongos index ttl so there is a way to process data.
+        $timeout = time() + $limit;
 
         while (time() < $timeout) {
             try {
                 $result = $this->collection->insertOne([
-                    '_id' => new ObjectID((string) $id),
+                    '_id' => new ObjectID((string)$id),
                     'timestamp' => new UTCDatetime(time() * 1000),
                     'sessionId' => $this->sessionId,
                 ]);
 
                 if (false == $result->isAcknowledged()) {
-                    throw new \LogicException(sprintf('Cannot obtain the lock for id %s. The insertOne operation is not acknowledged.', $id));
+                    throw new \LogicException(
+                        sprintf('Cannot obtain the lock for id %s. The insertOne operation is not acknowledged.', $id)
+                    );
                 }
 
                 return;
@@ -67,7 +83,9 @@ class PessimisticLock
             usleep(200000);
         }
 
-        throw new \RuntimeException(sprintf('Cannot obtain the lock for id "%s". Timeout after %s seconds', $id, $limit));
+        throw new \RuntimeException(
+            sprintf('Cannot obtain the lock for id "%s". Timeout after %s seconds', $id, $limit)
+        );
     }
 
     /**
@@ -76,23 +94,14 @@ class PessimisticLock
     public function unlock($id)
     {
         $result = $this->collection->deleteOne([
-            '_id' => new ObjectID((string) $id),
+            '_id' => new ObjectID((string)$id),
             'sessionId' => $this->sessionId,
         ]);
 
         if (false == $result->isAcknowledged()) {
-            throw new \LogicException(sprintf('Cannot unlock id %s. The deleteOne operation is not acknowledged.', $id));
-        }
-    }
-
-    public function unlockAll()
-    {
-        $result = $this->collection->deleteMany([
-            'sessionId' => $this->sessionId,
-        ]);
-
-        if (false == $result->isAcknowledged()) {
-            throw new \LogicException('Cannot unlock all locked ids. The deleteMany operation is not acknowledged.');
+            throw new \LogicException(
+                sprintf('Cannot unlock id %s. The deleteOne operation is not acknowledged.', $id)
+            );
         }
     }
 

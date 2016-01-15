@@ -16,7 +16,7 @@ abstract class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUpMongoClient()
     {
-        $client = new Client();
+        $client = new Client('mongodb://127.0.0.1');
         $this->database = $client->selectDatabase('yadm_test');
 
         foreach ($this->database->listCollections() as $collectionInfo) {
