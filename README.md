@@ -1,6 +1,6 @@
 # Yadm is a MongoDB ODM.
 
-[![Build Status](https://travis-ci.org/makasim/values.png?branch=master)](https://travis-ci.org/makasim/yadm)
+[![Build Status](https://travis-ci.org/postalservice14/values.png?branch=master)](https://travis-ci.org/postalservice14/yadm)
 
 The schema less ODM. It gives you the fastest hydration and persistent. The easiest solution for building aggregation roots or objects trees. Good choice for aggregation root models.
 

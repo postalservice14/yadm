@@ -1,36 +1,44 @@
-
 {
-  "name": "makasim/yadm",
-  "type": "library",
-  "description": "Yadm is a MongoDB ODM. Schema less. Fast object hydration and persistence.",
-  "keywords": ["model", "mongodb"],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Maksim Kotlyar",
-      "email": "kotlyar.maksim@gmail.com"
+    "name": "makasim/yadm",
+    "type": "library",
+    "description": "Yadm is a MongoDB ODM. Schema less. Fast object hydration and persistence.",
+    "keywords": [
+        "model",
+        "mongodb"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maksim Kotlyar",
+            "email": "kotlyar.maksim@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^5.5.0|^7.0",
+        "mongodb/mongodb": "1.0.*@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-4": {
+            "Makasim\\Yadm\\": "src"
+        },
+        "files": [
+            "src/functions_include.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Makasim\\Yadm\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
     }
-  ],
-  "require": {
-    "php": "^5.5.0|^7.0",
-    "mongodb/mongodb": "1.0.*@dev"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "~4.0"
-  },
-  "config": {
-    "bin-dir": "bin"
-  },
-  "autoload": {
-    "psr-4": { "Makasim\\Yadm\\": "src" },
-    "files": ["src/functions_include.php"]
-  },
-  "autoload0-dev": {
-    "psr-4": { "Makasim\\Yadm\\Tests\\": "tests" }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "0.1-dev"
-    }
-  }
 }
