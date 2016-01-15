@@ -1,5 +1,5 @@
 {
-    "name": "makasim/yadm",
+    "name": "postalservice14/yadm",
     "type": "library",
     "description": "Yadm is a MongoDB ODM. Schema less. Fast object hydration and persistence.",
     "keywords": [
@@ -18,7 +18,9 @@
         "mongodb/mongodb": "1.0.*@dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.0"
+        "phpunit/phpunit": "^4.0",
+        "scrutinizer/ocular": "^1.1",
+        "squizlabs/php_codesniffer": "^2.3"
     },
     "config": {
         "bin-dir": "bin"
